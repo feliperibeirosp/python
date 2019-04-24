@@ -119,6 +119,28 @@ class Column:
             return True
     validate = classmethod(_validate)
     
+class ColumnTest(unitest.TestCase):
+    def test_validate_bigint(self):
+        self.assertTrue(Column.validate('bigint', 100))
+        self.assertTrue(not Column.validate('bigint', 10.1))
+        self.assertTrue(not Column.validate('bigint', 'texto'))
+
+    def test_validate_numeric(self):
+        self.assertTrue(Column.validate('numeric', 10.1))
+        self.assertTrue(not Column.validate('numeric', 100))
+        self.assertTrue(not Column.validate('numeric', 'texto'))
+
+    def test_validate_varchar(self):
+        self.assertTrue(Column.validate('varchar', 'texto'))
+        self.assertTrue(not Column.validate('varchar', 100))
+        self.assertTrue(not Column.validate('varchar', 10.1))
+
+if __name__ == "__main__":
+    unitest.main()
+
+
+
+
 class Relationship:
     """Classe que representa um relacionamento entre DataTables
 
