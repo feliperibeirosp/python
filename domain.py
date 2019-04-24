@@ -24,6 +24,21 @@ class DataTable:
         self._references = []
         self._referenced = []
 
+    def _get_name(self):
+        print("Getter executado!")
+        return self._name
+    
+
+    def _set_name(self, _name):
+        print("Setter executado!")
+        self._name = _name
+
+    def _del_name(self):
+        print("Deletter executado!")
+        raise AttributeError("Não pode deletar esse atributo")
+
+    name = property(_get_name, _set_name, _del_name)
+
     def add_column(self, name, kind, description=""):
         column = Column(name, kind, description=description)
         self._columns.append(column)
@@ -87,23 +102,23 @@ class Column:
                                         self._description)
         return _str
 
-    def validate(self, data):
-        if self._kind == 'bigint':
+    def _validate(cls, kind, data):
+        if kind == 'bigint':
             if isinstance(data, int):
                 return True
             return False
-        elif self._kind == 'varchar':
+        elif kind == 'varchar':
             if isinstance(data, str):
                 return True
             return False
-        elif self._kind == 'numeric':
+        elif kind == 'numeric':
             try:
                 val = Decimal(data)
             except:
                 return False
             return True
-
- 
+    validate = classmethod(_validate)
+    
 class Relationship:
     """Classe que representa um relacionamento entre DataTables
 
