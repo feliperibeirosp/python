@@ -40,9 +40,14 @@ class DataTable:
     name = property(_get_name, _set_name, _del_name)
 
     def add_column(self, name, kind, description=""):
+        self._validate_kind(kind)
         column = Column(name, kind, description=description)
         self._columns.append(column)
         return column
+
+    def _validate_kind(self, kind):
+        if not kind in ('bigint', 'numeric', 'varchar'):
+            raise Exception("Tipo inválido")
 
     def add_references(self, name, to, on):
         """Cria uma referencia dessa tabela para uma outra tabela
@@ -68,6 +73,24 @@ class DataTable:
 
         relationship = Relationship(name, self, by, on)
         self._referenced.append(relationship)
+
+
+class DataTableTest(unittest.TestCase):
+    def test_add_column(self):
+        self.assertEqual(0, len(self.table._columns))
+
+        self.table.add_column('BId', 'bigint')
+        self.assertEqual(1, len(self.table._columns))
+
+        self.table.add_column('value', 'numeric')
+        self.assertEqual(2, len(self.table._columns))
+
+        self.table.add_column('desc', 'varchar')
+        self.assertEqual(3, len(self.table._columns))
+
+    def test_add_column_invalid_type(self):
+        a_table = DataTable('A')
+        self.assertRaises(Exception, a_table.add_column, ('col', 'invalid'))
 
 
 from decimal import Decimal
@@ -119,7 +142,7 @@ class Column:
             return True
     validate = classmethod(_validate)
     
-class ColumnTest(unitest.TestCase):
+class ColumnTest(unittest.TestCase):
     def test_validate_bigint(self):
         self.assertTrue(Column.validate('bigint', 100))
         self.assertTrue(not Column.validate('bigint', 10.1))
@@ -136,7 +159,7 @@ class ColumnTest(unitest.TestCase):
         self.assertTrue(not Column.validate('varchar', 10.1))
 
 if __name__ == "__main__":
-    unitest.main()
+    unittest.main()
 
 
 
