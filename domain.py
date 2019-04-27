@@ -1,3 +1,8 @@
+
+import unittest
+from decimal import Decimal
+
+
 class DataTable:
     """Representa uma Tabela de dados.
 
@@ -27,11 +32,10 @@ class DataTable:
     def _get_name(self):
         print("Getter executado!")
         return self._name
-    
 
-    def _set_name(self, _name):
+    def _set_name(self, name):
         print("Setter executado!")
-        self._name = _name
+        self._name = name
 
     def _del_name(self):
         print("Deletter executado!")
@@ -77,23 +81,22 @@ class DataTable:
 
 class DataTableTest(unittest.TestCase):
     def test_add_column(self):
-        self.assertEqual(0, len(self.table._columns))
+        table = DataTable('A')
+        self.assertEqual(0, len(table._columns))
 
-        self.table.add_column('BId', 'bigint')
-        self.assertEqual(1, len(self.table._columns))
+        table.add_column('BId', 'bigint')
+        self.assertEqual(1, len(table._columns))
 
-        self.table.add_column('value', 'numeric')
-        self.assertEqual(2, len(self.table._columns))
+        table.add_column('value', 'numeric')
+        self.assertEqual(2, len(table._columns))
 
-        self.table.add_column('desc', 'varchar')
-        self.assertEqual(3, len(self.table._columns))
+        table.add_column('desc', 'varchar')
+        self.assertEqual(3, len(table._columns))
 
     def test_add_column_invalid_type(self):
         a_table = DataTable('A')
         self.assertRaises(Exception, a_table.add_column, ('col', 'invalid'))
 
-
-from decimal import Decimal
 
 class Column:
     """Representa uma coluna em um DataTable
@@ -141,8 +144,10 @@ class Column:
                 return False
             return True
     validate = classmethod(_validate)
-    
+
+
 class ColumnTest(unittest.TestCase):
+
     def test_validate_bigint(self):
         self.assertTrue(Column.validate('bigint', 100))
         self.assertTrue(not Column.validate('bigint', 10.1))
@@ -150,7 +155,7 @@ class ColumnTest(unittest.TestCase):
 
     def test_validate_numeric(self):
         self.assertTrue(Column.validate('numeric', 10.1))
-        self.assertTrue(not Column.validate('numeric', 100))
+        self.assertTrue(Column.validate('numeric', 100))
         self.assertTrue(not Column.validate('numeric', 'texto'))
 
     def test_validate_varchar(self):
@@ -158,10 +163,9 @@ class ColumnTest(unittest.TestCase):
         self.assertTrue(not Column.validate('varchar', 100))
         self.assertTrue(not Column.validate('varchar', 10.1))
 
+
 if __name__ == "__main__":
     unittest.main()
-
-
 
 
 class Relationship:
@@ -186,6 +190,7 @@ class Relationship:
         self._from = _from
         self._to = to
         self._on = on
+
 
 class PrimaryKey(Column):
     def __init__(self, table, name, kind, description=""):
