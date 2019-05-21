@@ -81,9 +81,6 @@ class DataTable:
         self._referenced.append(relationship)
 
 
-
-
-
 class Column:
     """Representa uma coluna em um DataTable
     Essa classe contém as informações de uma coluna
