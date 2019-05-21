@@ -42,6 +42,8 @@ class DataTable:
         raise AttributeError("Não pode deletar esse atributo")
 
     name = property(_get_name, _set_name, _del_name)
+    references = property(lambda self: self._references)
+    referenced = property(lambda self: self._referenced)
 
     def add_column(self, name, kind, description=""):
         self._validate_kind(kind)
@@ -79,25 +81,7 @@ class DataTable:
         self._referenced.append(relationship)
 
 
-class DataTableTest(unittest.TestCase):
-    def setUp(self):
-        self.table = DataTable('A')
 
-    def test_add_column(self):
-        self.assertEqual(0, len(self.table._columns))
-
-        self.table.add_column('BId', 'bigint')
-        self.assertEqual(1, len(self.table._columns))
-
-        self.table.add_column('value', 'numeric')
-        self.assertEqual(2, len(self.table._columns))
-
-        self.table.add_column('desc', 'varchar')
-        self.assertEqual(3, len(self.table._columns))
-
-    def test_add_column_invalid_type(self):
-        a_table = DataTable('A')
-        self.assertRaises(Exception, a_table.add_column, ('col', 'invalid'))
 
 
 class Column:
@@ -128,9 +112,14 @@ class Column:
         _str = "Col: {} : {} {}".format(self._name,
                                         self._kind,
                                         self._description)
+
+        if self._is_pk:
+            _str = "({}) {}".format("PK", _str)
+
         return _str
 
-    def _validate(cls, kind, data):
+    @staticmethod
+    def validate(kind, data):
         if kind == 'bigint':
             if isinstance(data, int):
                 return True
@@ -145,7 +134,6 @@ class Column:
             except:
                 return False
             return True
-    validate = classmethod(_validate)
 
 
 class ColumnTest(unittest.TestCase):
@@ -195,7 +183,7 @@ class Relationship:
 
 
 class PrimaryKey(Column):
-    def __init__(self, table, name, kind, description=""):
+    def __init__(self, table, name, kind, description=None):
         super().__init__(name, kind, description=description)
         self._is_pk = True
 
