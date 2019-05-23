@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from decimal import Decimal
+from decimalexemplo import Decimal
 import unittest
 
 class Column:

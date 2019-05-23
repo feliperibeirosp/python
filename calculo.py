@@ -1,7 +1,7 @@
 # coding: utf-8
 
 
-from decimal import Decimal
+from decimalexemplo import Decimal
 from datetime import date
 
 total = Decimal('0')

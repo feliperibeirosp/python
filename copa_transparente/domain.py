@@ -1,6 +1,6 @@
 
 import unittest
-from decimal import Decimal
+from decimalexemplo import Decimal
 
 
 class DataTable:
