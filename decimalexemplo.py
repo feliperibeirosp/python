@@ -14,6 +14,13 @@ def dec(element, index):
         return Decimal('0')
 
 
+with open('data/data/ExecucaoFinanceira.csv','r') as data:
+    splited_data = [line.split(';') for line in data]
+    total = sum([dec(element, 5) for element in splited_data])
+
+print("Total gasto: {}".format(total))
+
+
 class QueryFile():
     def __init__(self, filename):
         self._file = open(filename, 'r')
@@ -40,11 +47,11 @@ class QueryFile():
 
 
 query = QueryFile('data/data/ExecucaoFinanceira.csv')
-
+"""
 for data in query(5, 7):
     print("Execucao no valor de {} assinada {}".format(data[0], data[1]))
 
-"""total = sum(dec(element, 5) for element in query)
+total = sum(dec(element, 5) for element in query)
 
 print("Total gasto: {}".format(total))
 """
