@@ -32,6 +32,9 @@ class DataTable:
 class Query:
     def __init__(self, attributes):
         self.attributes = attributes
+
+
+
 #
 #
 # table_proxy = Proxy(DataTable('ExecucaoFinanceira'))
@@ -44,7 +47,17 @@ class Query:
 # table = DataTable()
 # table.name = "ExecucaoFinanceira"
 
-t = DataTable("ExecucaoFinanceira")
-print(t._name)
-print(t.data)
-print(t.cols)
+# t = DataTable("ExecucaoFinanceira")
+# print(t._name)
+# print(t.data)
+# print(t.cols)
+
+
+class TenhoTudo:
+    def __contains__(self, item):
+        return True
+
+
+tem_tudo = TenhoTudo()
+print(1 in tem_tudo)
+
